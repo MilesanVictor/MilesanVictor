@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenSeadragon Zoom</title>
+    <script src="https://openseadragon.github.io/openseadragon/openseadragon.min.js"></script>
+    <style>
+        
+    #toolbarDiv {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: black;
+    padding: 16px;
+    box-sizing: border-box;
+    z-index: 10001;
+    transition: opacity 0.5s ease-in-out;
+    }
+
+    html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    color: #000000;
+    overflow: hidden;
+    }
+
+    #openseadragon-viewer{
+    width: 100%;
+    height: 100%;
+    color: #000000;
+    }
+
+    </style>
+</head>
+<body>
+    <div id= "toolbarDiv" class= "toolbar"></div>
+    
+    
+    <div id="openseadragon-viewer"></div>
+    <script>
+        var viewer = OpenSeadragon({
+            id: "openseadragon-viewer",
+            prefixUrl: "https://openseadragon.github.io/openseadragon/images/",
+            tileSources: "data/segmented_image/image.dzi",
+            position: "static",
+            animationTime: 0.5,
+            constrainDuringPan: true,
+            maxZoomPixelRatio: 2,
+            minZoomImageRatio: 0.5,
+            visibilityRatio: 1,
+            showNavigator: true,
+            navigatorPosition: "ABSOLUTE",
+            navigatorTop:      "40px",
+            navigatorLeft:     "4px",
+            navigatorHeight:   "120px",
+            navigatorWidth:    "145px",
+            toolbar: "toolbarDiv",
+
+        });
+
+
+    const toolbar = document.getElementById('toolbarDiv');
+    
+    let inactivityTimer;
+    function hideToolbar() {
+        toolbar.style.opacity = '0';
+
+        if (viewer.navigator) {
+           viewer.navigator.element.style.opacity = '0';
+        }
+    }
+
+    function showAndResetTimer() {
+        toolbar.style.opacity = '1';
+        if (viewer.navigator) {
+           viewer.navigator.element.style.opacity = '1';
+        }
+        clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(hideToolbar, 2000);
+    }
+
+    viewer.element.addEventListener('mousemove', showAndResetTimer);
+    viewer.addHandler('canvas-drag', showAndResetTimer);
+    toolbar.addEventListener('mousemove', showAndResetTimer);
+    viewer.addHandler('open', function() {
+        showAndResetTimer();
+        const navigatorEl = viewer.navigator.element;
+        if (navigatorEl) {
+            navigatorEl.style.transition = 'opacity 0.5s ease-in-out';
+            navigatorEl.addEventListener('mousemove', showAndResetTimer);
+        }
+    });
+    </script>
+</body>
+</html>

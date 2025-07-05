@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="aframe_gaussian_script.js"></script>
+    <script src="https://openseadragon.github.io/openseadragon/openseadragon.min.js"></script>
+
+     <style>
+      /* This is the overlay container. It's hidden by default. */
+      #overlay {
+        display: none; /* Initially hidden */
+        position: fixed; /* Sit on top of the page content */
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.7); /* Black background with opacity */
+        z-index: 100; /* Make sure it's on top of the A-Frame scene */
+        /* CHANGE: Centering properties removed as the child will now be full size */
+      }
+
+      /* This is the white window inside the overlay */
+      .overlay-window {
+        position: relative; /* Needed for positioning the close button */
+        background-color: white;
+        /* CHANGE: Set width and height to 100% to fill the parent */
+        width: 100%;
+        height: 100%;
+        /* CHANGE: Padding and other sizing properties removed or adjusted */
+        padding: 0; /* Padding is now 0, the iframe will control its own content */
+        box-sizing: border-box; /* Ensures padding/border are inside the 100% */
+      }
+
+      /* Style for the 'X' close button */
+      #close-btn {
+        position: absolute;
+        top: 15px;  /* Adjusted for better placement */
+        right: 20px; /* Adjusted for better placement */
+        font-size: 40px; /* Made slightly larger */
+        font-family: sans-serif;
+        color: #555;
+        cursor: pointer;
+        border: none;
+        background: none;
+        z-index: 1; /* Keep this to ensure it's on top of the iframe */
+      }
+      #close-btn:hover {
+        color: #000;
+      }
+    </style>
+
+  </head>
+
+  <body>
+     <div id="overlay">
+      <div class="overlay-window">
+        <!-- The button is now inside the window, which is full screen -->
+        <button id="close-btn">×</button>
+        <!-- The iframe will take up the full space of its parent -->
+        <iframe id="content-iframe" src="about:blank" style="width: 100%; height: 100%; border: none;"></iframe>
+      </div>
+    </div>
+
+    <a-scene renderer="antialias: false">
+      <a-camera wasd-controls-enabled="true" look-controls="pointerLockEnabled: true">
+         <a-cursor id="mouse-cursor" color="black"></a-cursor>
+      </a-camera>
+
+      <a-entity id="clickable-spheres" position="0 1.6 -2.0" animation="property: rotation; to: 0 360 0; dur: 10000; easing: linear; loop: true">
+        <a-sphere position="0 0 0.5" radius="0.5" color="#EF2D5E"></a-sphere>
+        <a-sphere position="0 0 -0.5" radius="0.5" color="#EF2D5E"></a-sphere>
+      </a-entity>
+      <a-entity gaussian_splatting="src: /data/scene1.splat;" rotation="0 0 0" position="0 1 0"></a-entity>
+    </a-scene>
+
+<script>
+    window.onload = function () {
+        const clickableEntity = document.querySelector('#clickable-spheres');
+        const overlay = document.querySelector('#overlay');
+        const closeBtn = document.querySelector('#close-btn');
+        const contentIframe = document.querySelector('#content-iframe');
+        const cursor = document.querySelector('#mouse-cursor');
+        function showOverlay() {
+          contentIframe.src = 'openseadragon.html';
+          overlay.style.display = 'block';
+        }
+
+        function hideOverlay() {
+          overlay.style.display = 'none';
+          contentIframe.src = 'about:blank';
+        }
+
+        clickableEntity.addEventListener('click', showOverlay);
+        closeBtn.addEventListener('click', hideOverlay);
+
+       // These events are fired ON the object being hovered over.
+
+        // When the cursor enters the clickable entity's bounds
+        clickableEntity.addEventListener('mouseenter', () => {
+        cursor.setAttribute('color', 'white');
+        });
+
+        clickableEntity.addEventListener('mouseleave', () => {
+        cursor.setAttribute('color', 'black');
+        });
+      };
+  </script>
+  </body>
+</html>
