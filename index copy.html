@@ -3,7 +3,7 @@
   <head>
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <script src="aframe_gaussian_script.js"></script>
-    <script src="https://openseadragon.github.io/openseadragon/openseadragon.min.js"></script>
+ <script src="https://openseadragon.github.io/openseadragon/openseadragon.min.js"></script>
 
      <style>
       /* This is the overlay container. It's hidden by default. */
@@ -18,27 +18,24 @@
         bottom: 0;
         background-color: rgba(0, 0, 0, 0.7); /* Black background with opacity */
         z-index: 100; /* Make sure it's on top of the A-Frame scene */
-        /* CHANGE: Centering properties removed as the child will now be full size */
       }
 
       /* This is the white window inside the overlay */
       .overlay-window {
         position: relative; /* Needed for positioning the close button */
         background-color: white;
-        /* CHANGE: Set width and height to 100% to fill the parent */
         width: 100%;
         height: 100%;
-        /* CHANGE: Padding and other sizing properties removed or adjusted */
-        padding: 0; /* Padding is now 0, the iframe will control its own content */
-        box-sizing: border-box; /* Ensures padding/border are inside the 100% */
+        padding: 0;
+        box-sizing: border-box;
       }
 
       /* Style for the 'X' close button */
       #close-btn {
         position: absolute;
-        top: 15px;  /* Adjusted for better placement */
-        right: 20px; /* Adjusted for better placement */
-        font-size: 40px; /* Made slightly larger */
+        top: 15px;
+        right: 20px;
+        font-size: 40px;
         font-family: sans-serif;
         color: #555;
         cursor: pointer;
@@ -54,25 +51,32 @@
   </head>
 
   <body>
+
+    
      <div id="overlay">
       <div class="overlay-window">
-        <!-- The button is now inside the window, which is full screen -->
         <button id="close-btn">×</button>
-        <!-- The iframe will take up the full space of its parent -->
         <iframe id="content-iframe" src="about:blank" style="width: 100%; height: 100%; border: none;"></iframe>
       </div>
     </div>
 
     <a-scene renderer="antialias: false">
-      <a-camera wasd-controls-enabled="true" look-controls="pointerLockEnabled: true">
+      <a-assets>
+        <img id="miniature-img" src="miniature.jpg">
+      </a-assets>
+     <!-- <a-assets> -->
+        <a-entity gaussian_splatting="src:https://huggingface.co/datasets/peqod/walktest/resolve/main/scene1.splat;" rotation="0 0 0" position="0 1 0"></a-entity>
+     
+        <a-camera id="camera" wasd-controls-enabled="true" look-controls="pointerLockEnabled: true">
          <a-cursor id="mouse-cursor" color="black"></a-cursor>
-      </a-camera>
+        </a-camera>
 
-      <a-entity id="clickable-spheres" position="0 1.6 -2.0" animation="property: rotation; to: 0 360 0; dur: 10000; easing: linear; loop: true">
-        <a-sphere position="0 0 0.5" radius="0.5" color="#EF2D5E"></a-sphere>
-        <a-sphere position="0 0 -0.5" radius="0.5" color="#EF2D5E"></a-sphere>
-      </a-entity>
-      <a-entity gaussian_splatting="src: /data/scene1.splat;" rotation="0 0 0" position="0 1 0"></a-entity>
+        <a-entity id="clickable-spheres" position="-5.3 2.2 -4.25" rotation="0 88 0" scale="1.2 2 1">
+          <a-plane src="#miniature-img" height="1" width="1"></a-plane>
+        </a-entity>
+
+        <a-sky color="#c2f0ff"></a-sky>
+      <!--</a-assets> -->
     </a-scene>
 
 <script>
@@ -82,28 +86,38 @@
         const closeBtn = document.querySelector('#close-btn');
         const contentIframe = document.querySelector('#content-iframe');
         const cursor = document.querySelector('#mouse-cursor');
+        const camera = document.querySelector('#camera');
+
         function showOverlay() {
           contentIframe.src = 'openseadragon.html';
           overlay.style.display = 'block';
+
+          // CHANGE 2: Exit pointer lock and disable movement controls
+          // This releases the mouse cursor so you can interact with the overlay and iframe.
+          if (document.pointerLockElement) {
+            document.exitPointerLock();
+          }
+          camera.setAttribute('wasd-controls-enabled', 'false');
         }
 
         function hideOverlay() {
           overlay.style.display = 'none';
           contentIframe.src = 'about:blank';
+
+          // The user will automatically re-enter pointer lock by clicking the A-Frame scene.
+          camera.setAttribute('wasd-controls-enabled', 'true');
         }
 
         clickableEntity.addEventListener('click', showOverlay);
         closeBtn.addEventListener('click', hideOverlay);
 
-       // These events are fired ON the object being hovered over.
-
-        // When the cursor enters the clickable entity's bounds
+        // These events are fired ON the object being hovered over.
         clickableEntity.addEventListener('mouseenter', () => {
-        cursor.setAttribute('color', 'white');
+          cursor.setAttribute('color', 'white');
         });
 
         clickableEntity.addEventListener('mouseleave', () => {
-        cursor.setAttribute('color', 'black');
+          cursor.setAttribute('color', 'black');
         });
       };
   </script>
