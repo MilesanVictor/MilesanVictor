@@ -46,43 +46,6 @@
       #close-btn:hover {
         color: #000;
       }
-
-      #loading-screen {
-        display: flex;
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        background-color: #000;
-        z-index: 200;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        transition: opacity 1s;
-        opacity: 1;
-      }
-
-      #progress-container {
-        width: 300px;
-        height: 5px;
-        background-color: #333;
-        border-radius: 5px;
-      }
-
-      #progress-bar {
-        width: 0%;
-        height: 100%;
-        background-color: #fff;
-        border-radius: 5px;
-      }
-
-      #progress-text {
-        color: #fff;
-        font-family: sans-serif;
-        font-size: 18px;
-        margin-top: 10px;
-      }
     </style>
 
   </head>
@@ -97,19 +60,12 @@
       </div>
     </div>
 
-    <div id="loading-screen">
-      <div id="progress-container">
-        <div id="progress-bar"></div>
-      </div>
-      <p id="progress-text">0%</p>
-    </div>
-
     <a-scene renderer="antialias: false">
       <a-assets>
         <img id="miniature-img" src="miniature.jpg">
       </a-assets>
      <!-- <a-assets> -->
-        <a-entity id="splat-entity" rotation="0 0 0" position="0 1 0"></a-entity>
+        <a-entity gaussian_splatting="src:https://huggingface.co/datasets/peqod/walktest/resolve/main/scene1.splat;" rotation="0 0 0" position="0 1 0"></a-entity>
      
         <a-camera id="camera" wasd-controls-enabled="true" look-controls="pointerLockEnabled: true">
          <a-cursor id="mouse-cursor" color="black"></a-cursor>
@@ -164,45 +120,6 @@
           cursor.setAttribute('color', 'black');
         });
       };
-  </script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const loadingScreen = document.getElementById('loading-screen');
-      const progressBar = document.getElementById('progress-bar');
-      const progressText = document.getElementById('progress-text');
-      const splatEntity = document.getElementById('splat-entity');
-      const splatUrl = 'https://huggingface.co/datasets/peqod/walktest/resolve/main/scene1.splat';
-
-      let xhr = new XMLHttpRequest();
-      xhr.open('GET', splatUrl, true);
-      xhr.responseType = 'arraybuffer';
-
-      xhr.onprogress = function(event) {
-        if (event.lengthComputable) {
-          const percentComplete = Math.round((event.loaded / event.total) * 100);
-          progressBar.style.width = percentComplete + '%';
-          progressText.textContent = percentComplete + '%';
-        } else {
-          progressText.textContent = 'Loading...';
-        }
-      };
-
-      xhr.onload = function() {
-        if (xhr.status === 200) {
-          const arrayBuffer = xhr.response;
-          const blob = new Blob([arrayBuffer]);
-          const blobUrl = URL.createObjectURL(blob);
-          splatEntity.setAttribute('gaussian_splatting', 'src: ' + blobUrl);
-          loadingScreen.style.opacity = '0';
-          setTimeout(function() {
-            loadingScreen.style.display = 'none';
-          }, 1000);
-        }
-      };
-
-      xhr.send();
-    });
   </script>
   </body>
 </html>
