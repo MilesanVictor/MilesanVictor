@@ -1,73 +1,140 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Deep Zoom Viewer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenSeadragon Zoom</title>
     <script src="https://openseadragon.github.io/openseadragon/openseadragon.min.js"></script>
     <style>
+        #toolbarDiv {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: black;
+            padding: 16px;
+            box-sizing: border-box;
+            z-index: 10001;
+            transition: opacity 0.5s ease-in-out;
+        }
+
         html, body {
             width: 100%;
             height: 100%;
             margin: 0;
-            padding: 0;
-            overflow: hidden; /* Prevent scrollbars on the page itself */
+            color: #000000;
+            overflow: hidden;
         }
 
-        #openseadragon-viewer {
+        #openseadragon-viewer{
             width: 100%;
             height: 100%;
+            color: #000000;
         }
 
+        /* --- NEW --- Style for the close button */
         #close-btn {
             position: absolute;
             top: 15px;
             right: 20px;
-            font-size: 30px;
+            font-size: 24px;
             font-family: Arial, sans-serif;
-            color: #fff;
-            background-color: rgba(0,0,0,0.5);
+            font-weight: bold;
+            color: #000;
+            background-color: #fff;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             text-align: center;
-            line-height: 40px;
+            line-height: 35px;
             cursor: pointer;
             border: none;
-            z-index: 99999; /* Ensure it's on top of OSD controls */
+            z-index: 10002; /* Higher than toolbar to ensure it's on top */
         }
         #close-btn:hover {
-            background-color: rgba(0,0,0,0.8);
+            background-color: #ccc;
         }
     </style>
 </head>
 <body>
-    <!-- The close button -->
+    <!-- This is your existing toolbar -->
+    <div id= "toolbarDiv" class= "toolbar"></div>
+
+    <!-- --- NEW --- The close button -->
     <div id="close-btn">X</div>
 
-    <!-- The container for the OpenSeadragon viewer -->
     <div id="openseadragon-viewer"></div>
 
-    <script type="text/javascript">
-        // 1. Get the URL parameters from the address that loaded this page
+    <script>
+        // --- NEW --- Get the DZI path from the URL that opened this page
         const urlParams = new URLSearchParams(window.location.search);
         const dziPath = urlParams.get('dzi');
 
-        // 2. If a DZI path was provided, initialize OpenSeadragon
+        var viewer;
+
+        // --- NEW --- Only initialize if a DZI path was actually provided
         if (dziPath) {
-            var viewer = OpenSeadragon({
+            viewer = OpenSeadragon({
                 id: "openseadragon-viewer",
                 prefixUrl: "https://openseadragon.github.io/openseadragon/images/",
+                // --- MODIFIED --- Use the dynamic path from the URL
                 tileSources: dziPath,
+                position: "static",
+                animationTime: 0.5,
+                constrainDuringPan: true,
+                maxZoomPixelRatio: 2,
+                minZoomImageRatio: 0.5,
+                visibilityRatio: 1,
                 showNavigator: true,
-                navigatorPosition: "BOTTOM_RIGHT"
+                navigatorPosition: "ABSOLUTE",
+                navigatorTop:      "40px",
+                navigatorLeft:     "4px",
+                navigatorHeight:   "120px",
+                navigatorWidth:    "145px",
+                toolbar: "toolbarDiv",
             });
         } else {
-            console.error("No DZI path provided in URL parameter 'dzi'");
-            document.body.innerHTML = '<h1>Error: No image specified.</h1>';
+            // Display an error if the page was opened incorrectly
+            document.body.innerHTML = '<h1>Error: No DZI image path provided.</h1>';
         }
 
-        // 3. Set up the close button to communicate with the main PlayCanvas window
+
+        // This is your existing toolbar hiding logic. It's unchanged.
+        const toolbar = document.getElementById('toolbarDiv');
+        let inactivityTimer;
+        function hideToolbar() {
+            toolbar.style.opacity = '0';
+            if (viewer && viewer.navigator) {
+               viewer.navigator.element.style.opacity = '0';
+            }
+        }
+
+        function showAndResetTimer() {
+            toolbar.style.opacity = '1';
+            if (viewer && viewer.navigator) {
+               viewer.navigator.element.style.opacity = '1';
+            }
+            clearTimeout(inactivityTimer);
+            inactivityTimer = setTimeout(hideToolbar, 2000);
+        }
+
+        if (viewer) {
+            viewer.element.addEventListener('mousemove', showAndResetTimer);
+            viewer.addHandler('canvas-drag', showAndResetTimer);
+            toolbar.addEventListener('mousemove', showAndResetTimer);
+            viewer.addHandler('open', function() {
+                showAndResetTimer();
+                const navigatorEl = viewer.navigator.element;
+                if (navigatorEl) {
+                    navigatorEl.style.transition = 'opacity 0.5s ease-in-out';
+                    navigatorEl.addEventListener('mousemove', showAndResetTimer);
+                }
+            });
+        }
+
+        // --- NEW --- Add the event listener for our close button
         document.getElementById('close-btn').addEventListener('click', function() {
-            // This sends a message to the parent window (your PlayCanvas app)
+            // This sends a 'close-iframe' message back to the main PlayCanvas window
             window.parent.postMessage('close-iframe', '*');
         });
     </script>
