@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Deep Zoom Viewer</title>
+    <script src="https://openseadragon.github.io/openseadragon/openseadragon.min.js"></script>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent scrollbars on the page itself */
+        }
+
+        #openseadragon-viewer {
+            width: 100%;
+            height: 100%;
+        }
+
+        #close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 30px;
+            font-family: Arial, sans-serif;
+            color: #fff;
+            background-color: rgba(0,0,0,0.5);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            cursor: pointer;
+            border: none;
+            z-index: 99999; /* Ensure it's on top of OSD controls */
+        }
+        #close-btn:hover {
+            background-color: rgba(0,0,0,0.8);
+        }
+    </style>
+</head>
+<body>
+    <!-- The close button -->
+    <div id="close-btn">X</div>
+
+    <!-- The container for the OpenSeadragon viewer -->
+    <div id="openseadragon-viewer"></div>
+
+    <script type="text/javascript">
+        // 1. Get the URL parameters from the address that loaded this page
+        const urlParams = new URLSearchParams(window.location.search);
+        const dziPath = urlParams.get('dzi');
+
+        // 2. If a DZI path was provided, initialize OpenSeadragon
+        if (dziPath) {
+            var viewer = OpenSeadragon({
+                id: "openseadragon-viewer",
+                prefixUrl: "https://openseadragon.github.io/openseadragon/images/",
+                tileSources: dziPath,
+                showNavigator: true,
+                navigatorPosition: "BOTTOM_RIGHT"
+            });
+        } else {
+            console.error("No DZI path provided in URL parameter 'dzi'");
+            document.body.innerHTML = '<h1>Error: No image specified.</h1>';
+        }
+
+        // 3. Set up the close button to communicate with the main PlayCanvas window
+        document.getElementById('close-btn').addEventListener('click', function() {
+            // This sends a message to the parent window (your PlayCanvas app)
+            window.parent.postMessage('close-iframe', '*');
+        });
+    </script>
+</body>
+</html>
