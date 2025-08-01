@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@sparkjsdev/spark": "^0.1.6",
+    "gsap": "^3.13.0",
+    "sass": "^1.89.2",
     "three": "^0.174.0"
   },
   "devDependencies": {
