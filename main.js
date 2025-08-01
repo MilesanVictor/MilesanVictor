@@ -43,7 +43,6 @@ art2.position.set(2, 0, -5);
 scene.add(art2);
 intersectableObjects.push(art2); // Add to raycastable objects
 
-
 //--Controls setup (modular)
 const { controls, getMoveState } = setupPointerLockControls(camera, renderer.domElement);
 scene.add(controls.object);
@@ -81,7 +80,6 @@ controls.addEventListener('lock', function () {
 controls.addEventListener('unlock', function () {
     isPointerLocked = false;
 });
-
 
 let lastCameraState = null;
 
@@ -153,24 +151,6 @@ window.addEventListener('message', function(event) {
         hideOverlayIframe();
     }
 });
-
-//function onClick(event) {
-//    if (isPointerLocked) {
-//        mouse.x = 0;
-//        mouse.y = 0;
-//    } else {
-//        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-//        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-//    }
-//    raycaster.setFromCamera(mouse, camera);
-//    const intersects = raycaster.intersectObjects(intersectableObjects);
-//    if (intersects.length > 0) {
-//        showOverlayIframe();
-//    }
-//}
-//
-//window.addEventListener('mousedown', onClick);
-
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement)

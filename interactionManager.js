@@ -9,13 +9,19 @@ let showOverlayCallback = null;
 
 let ignorenextClick = false;
 
+// Removed duplicate and incomplete onClick function
+
 // 1. Check if the next click should be ignored
 function onClick(event) {
+    const isPointerLocked = !!document.pointerLockElement;
+    if (!isPointerLocked) {
+        return;
+    }
     if (ignorenextClick) {
         ignorenextClick = false;
         return;
     }
-    const isPointerLocked = !!document.pointerLockElement;
+
     // 2. Calculate mouse position for raycasting
     if (isPointerLocked) {
         mouse.x = 0;
