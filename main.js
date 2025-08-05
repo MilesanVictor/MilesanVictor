@@ -5,14 +5,11 @@ import { int } from "three/tsl";
 import { clamp } from "three/src/math/MathUtils.js";
 import { RGBELoader } from "three/examples/jsm/Addons.js";
 import { setupInteractionManager, setIgnoreNextClick } from './interactionManager.js';
+import { getAssetFileURL } from './get-asset-url.js';
 
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
-const intersectableObjects = []; // Array to hold objects for raycasting
-
-//resize the renderer
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -20,13 +17,21 @@ function onWindowResize() {
 }
 window.addEventListener('resize', onWindowResize, false);
 
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+const intersectableObjects = []; // Array to hold objects for raycasting
+
+//resize the renderer
+
+
 // Scene setup
-const splatURL = "./scene1.ply";
-const scnPlatz = new SplatMesh({ url: splatURL });
-scnPlatz.quaternion.set(1, 0, 0, 0);
-scnPlatz.position.set(0, -.6, -3);
+//const splatURL = "./scene1.ply";
+const splatURL = await getAssetFileURL("output.zip");
+const output = new SplatMesh({ url: splatURL });
+output.quaternion.set(1, 0, 0, 0);
+output.position.set(0, -.6, -3);
 scene.background = new THREE.Color(0x5568ff);
-scene.add(scnPlatz);
+scene.add(output);
 
 // Add a mesh to the scene
 const geometry = new THREE.BoxGeometry(1, 1, 1);
