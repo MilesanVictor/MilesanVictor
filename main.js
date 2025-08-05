@@ -7,28 +7,32 @@ import { RGBELoader } from "three/examples/jsm/Addons.js";
 import { setupInteractionManager, setIgnoreNextClick } from './interactionManager.js';
 import { getAssetFileURL } from './get-asset-url.js';
 
-
 const scene = new THREE.Scene();
 const renderer = new THREE.WebGLRenderer();
-//resize the renderer
-function onWindowResize() {
+function onWindowResize() { //resize the renderer
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
-}
+} 
 window.addEventListener('resize', onWindowResize, false);
-//camera setup
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+const camera = new THREE.PerspectiveCamera(
+    75, window.innerWidth / window.innerHeight, 0.1, 1000); 
+//Add a crosshair to the camera
+const circleGeometry = new THREE.CircleGeometry(0.1, 32);
+const circleMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+const circle = new THREE.Mesh(circleGeometry, circleMaterial);
+circle.position.set(0, 0, -.1); // -.1 unit in front of camera
+circle.scale.set(.01, .01, .01); 
+camera.add(circle);
+scene.add(camera);
+const intersectableObjects = [];// Array to hold objects for raycasting 
 
-// Array to hold objects for raycasting
-const intersectableObjects = []; 
-
-// Scene setup, getasset works from assets.json. Add a file to the list, link here.
-//const splatURL = "./scene1.ply";
-const splatURL = await getAssetFileURL("output.zip");
+const splatURL = await getAssetFileURL("output.zip");// add assets in assets.json
 const output = new SplatMesh({ url: splatURL });
-output.quaternion.set(1, 0, 0, 0);
-output.position.set(0, -.6, -3);
+output.quaternion.set(1, 0, 0, 0); // to do, make change with each scene
+output.position.set(0, -.6, -3); // to do, make change with each scene
 scene.background = new THREE.Color(0x5568ff);
 scene.add(output);
 
@@ -47,46 +51,33 @@ art2.position.set(2, 0, -5);
 scene.add(art2);
 intersectableObjects.push(art2); // Add to raycastable objects
 
-//--Controls setup (modular)
+//Controls setup (modular)
 const { controls, getMoveState } = setupPointerLockControls(camera, renderer.domElement);
 scene.add(controls.object);
-
 const clock = new THREE.Clock();
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
 
-// Add a crosshair to the camera
-const circleGeometry = new THREE.CircleGeometry(0.1, 32);
-const circleMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
-const circle = new THREE.Mesh(circleGeometry, circleMaterial);
-circle.position.set(0, 0, -.1); // -.1 unit in front of camera
-circle.scale.set(.01, .01, .01); 
-camera.add(circle);
-scene.add(camera);
 // Setup interaction manager for click-based raycasting
 setupInteractionManager(camera, intersectableObjects, (intersection) => {
     console.log('[DEBUG] setupInteractionManager callback', intersection);
     showOverlayIframe();
 });
 console.log('[DEBUG] setupInteractionManager initialized');
-
 // Raycasting setup for pointer lock
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 let isPointerLocked = false;
 let ignorenextClick = false;
-
 // Assuming 'controls' is your instance of PointerLockControls
 controls.addEventListener('lock', function () {
     isPointerLocked = true;
 });
-
 controls.addEventListener('unlock', function () {
     isPointerLocked = false;
 });
-
 let lastCameraState = null;
-
+//Iframe overlay management
 function showOverlayIframe() {
     console.log('[DEBUG] showOverlayIframe called');
     let iframe = document.getElementById('overlay-iframe');
@@ -127,11 +118,8 @@ function hideOverlayIframe() {
     if (iframe) {
         iframe.style.display = 'none';
     }
-
-    //ignore next click
-    setIgnoreNextClick();
-    //pointer lock click delay
-    ignorenextClick = true;
+    setIgnoreNextClick(); //ignore next click 
+    ignorenextClick = true; //pointer lock click delay
      clock.getDelta();
      //clamp delta
     const delta = clock.getDelta();
@@ -146,39 +134,28 @@ function hideOverlayIframe() {
         camera.matrix.copy(lastCameraState.matrix);
         camera.matrixWorld.copy(lastCameraState.matrixWorld);
     }
-    // Reset clock to avoid animation stutter
-    renderer.setAnimationLoop(animate);
+    renderer.setAnimationLoop(animate); // Reset clock, fix stutter
 }
-
 window.addEventListener('message', function(event) {
     if (event.data && event.data.type === 'close-iframe') {
         hideOverlayIframe();
     }
 });
-
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement)
-
 //animate function
 function animate() {
     // Clamp delta to avoid large jumps (e.g. after tabbing back)
     let delta = clock.getDelta();
     delta = Math.min(delta, 1/60); // Cap at 60 FPS
     const { moveForward, moveBackward, moveLeft, moveRight } = getMoveState();
-
     velocity.x -= velocity.x * 80 * delta;
     velocity.z -= velocity.z * 80 * delta;
-
     direction.z = Number(moveForward) - Number(moveBackward);
     direction.x = Number(moveRight) - Number(moveLeft);
     direction.normalize(); // this ensures consistent movements in all directions
-
     if (moveForward || moveBackward) velocity.z -= direction.z * 400.0 * delta;
     if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
-
     controls.moveRight(-velocity.x * delta);
     controls.moveForward(-velocity.z * delta);
-
     // Raycast from camera center to check intersection with object3d
     mouse.set(0, 0); // Always center for pointer lock
     raycaster.setFromCamera(mouse, camera);
@@ -190,15 +167,6 @@ function animate() {
         circle.material.color.set(0xffffff);
         circle.scale.set(.01, .01, .01); // Change back to white
     }
-
-//      // Log distance from camera to center of scene
-//      const cameraDistance = camera.position.length();
-//      //make the distance read out every second
-//      if (Math.floor(cameraDistance) % 1 === 0) {
-//      console.log('Camera distance to center:', cameraDistance.toFixed(2));
-//    }
-
     renderer.render(scene, camera);
 }
-
 renderer.setAnimationLoop(animate);
