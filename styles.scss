@@ -1,37 +1,44 @@
+// styles.scss
+// Main stylesheet for the app. Use this file for global and overlay styles.
+
+// ----- Base Styles -----
 body {
-    margin: 0;
-    padding: 0;
-    flex: auto;
-    overflow: hidden;
-    background-color: #111; /* Added a background color for better visibility */
+  margin: 0;
+  padding: 0;
+  flex: auto;
+  overflow: hidden;
+  background-color: #111; // App background
 }
 
+// ----- Overlay Display Class -----
 .ondisplay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    outline: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  outline: none;
 }
 
+// ----- Blocker Overlay -----
 #blocker {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
 }
 
+// ----- Instructions Overlay -----
 #instructions {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    font-size: 14px;
-    font-family: sans-serif; /* Added for better readability */
-    cursor: pointer;
-    color: white;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 14px;
+  font-family: sans-serif; // For better readability
+  cursor: pointer;
+  color: white;
 }

@@ -187,13 +187,12 @@ function animate() {
         circle.scale.set(.01, .01, .01); // Change back to white
     }
 
-    // Log distance from camera to center of scene
-    const cameraDistance = camera.position.length();
-    //make the distance read out every second
-    if (Math.floor(cameraDistance) % 1 === 0) {
-
-    console.log('Camera distance to center:', cameraDistance.toFixed(2));
-    }
+//      // Log distance from camera to center of scene
+//      const cameraDistance = camera.position.length();
+//      //make the distance read out every second
+//      if (Math.floor(cameraDistance) % 1 === 0) {
+//      console.log('Camera distance to center:', cameraDistance.toFixed(2));
+//    }
 
     renderer.render(scene, camera);
 }

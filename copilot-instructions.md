@@ -1,7 +1,8 @@
 # Copilot Instructions
 
 ## General Coding Best Practices
-
+- **General Readability:**
+  - comment the file explaining what goes into it. Do not explain in dialogue window unless necessary. Adapt the file and advise of eventual dependencies. Or fix them if you can access directory from here.
 - **Follow SOLID Principles:**
   - Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion.
 - **KISS (Keep It Simple, Stupid):**
