@@ -10,21 +10,20 @@ import { getAssetFileURL } from './get-asset-url.js';
 
 const scene = new THREE.Scene();
 const renderer = new THREE.WebGLRenderer();
+//resize the renderer
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 window.addEventListener('resize', onWindowResize, false);
-
+//camera setup
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-const intersectableObjects = []; // Array to hold objects for raycasting
+// Array to hold objects for raycasting
+const intersectableObjects = []; 
 
-//resize the renderer
-
-
-// Scene setup
+// Scene setup, getasset works from assets.json. Add a file to the list, link here.
 //const splatURL = "./scene1.ply";
 const splatURL = await getAssetFileURL("output.zip");
 const output = new SplatMesh({ url: splatURL });
