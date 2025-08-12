@@ -1,13 +1,17 @@
 // styles.scss
 // Main stylesheet for the app. Use this file for global and overlay styles.
 
+$primary: #317def;
+$secondary: $primary;
+$background: #f6f6f6;
+$overlay: #000000;
 // ----- Base Styles -----
 body {
   margin: 0;
   padding: 0;
   flex: auto;
   overflow: hidden;
-  background-color: #111; // App background
+  background-color: $overlay; // App background
 }
 
 // ----- Overlay Display Class -----
@@ -25,7 +29,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.5);
+  background-color: $background;
 }
 
 // ----- Instructions Overlay -----
@@ -40,7 +44,7 @@ body {
   font-size: 14px;
   font-family: sans-serif; // For better readability
   cursor: pointer;
-  color: white;
+  color:$background;
 }
 
 // ----- Landing Page Styles from index.html -----
@@ -48,7 +52,7 @@ body {
 body {
   font-family: 'Source-Sans-Pro', Tahoma, sans-serif;
   scroll-behavior: smooth;
-  background-color: #fafafa;
+  background-color:$background;
 }
 
 .fade-overlay {
@@ -57,7 +61,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: black;
+  background-color: $overlay;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.5s;
@@ -69,13 +73,13 @@ body {
 }
 
 .navbar {
-  background-color: rgba(255,255,255,0.95);
-  backdrop-filter: blur(6px);
-  box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+  background-color: #000000 ;
+  position: flex;
+  backdrop-filter: blur(4px);
   .navbar-brand {
     font-weight: 800;
     font-size: 1.6rem;
-    color: #6a11cb !important;
+    color: $background !important;
     letter-spacing: -0.5px;
   }
   .navbar-nav {
@@ -83,31 +87,19 @@ body {
       position: relative;
       font-weight: 500;
       margin: 0 12px;
-      color: #333 !important;
+      color: $background !important;
       transition: 0.3s;
       &:hover {
-        color: #6a11cb !important;
+        color: $primary!important;
       }
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: -4px;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background-color: #6a11cb;
-        transition: width 0.3s ease;
-      }
-      &:hover::after {
-        width: 100%;
-      }
+      // &::after removed because it was empty
     }
   }
 }
 
 // HERO
 #header {
-  background: url('https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg') center/cover no-repeat;
+  background: url('public/landing01.jpg') center/cover no-repeat;
   color: white;
   text-align: center;
   position: relative;
@@ -139,8 +131,8 @@ body {
   border-radius: 50px;
   transition: transform 0.3s ease;
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 20px rgba(106,17,203,0.3);
+    transform: scale(1.05);
+    box-shadow: 0px 0px 0px rgba(246,246,246,0.3);
   }
 }
 
