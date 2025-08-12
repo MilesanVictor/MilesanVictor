@@ -118,8 +118,10 @@ function hideOverlayIframe() {
     if (iframe) {
         iframe.style.display = 'none';
     }
+    /*
     setIgnoreNextClick(); //ignore next click 
     ignorenextClick = true; //pointer lock click delay
+    */
      clock.getDelta();
      //clamp delta
     const delta = clock.getDelta();

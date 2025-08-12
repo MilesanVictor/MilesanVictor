@@ -1,14 +1,14 @@
 {
   "output.zip": {
-    "url": "./public/output/output.zip",
+    "url": "./output/output.zip",
     "directory": "output"
   },
     "output02.zip": {
-    "url": "./public/output/output02.zip",
+    "url": "./output/output02.zip",
     "directory": "output02"
   },
     "output03.zip": {
-    "url": "./public/output/output03.zip",
+    "url": "./output/output03.zip",
     "directory": "output03"
   }
 }

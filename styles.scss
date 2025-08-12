@@ -42,3 +42,133 @@ body {
   cursor: pointer;
   color: white;
 }
+
+// ----- Landing Page Styles from index.html -----
+
+body {
+  font-family: 'Source-Sans-Pro', Tahoma, sans-serif;
+  scroll-behavior: smooth;
+  background-color: #fafafa;
+}
+
+.fade-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+  z-index: 9999;
+  &.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.navbar {
+  background-color: rgba(255,255,255,0.95);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+  .navbar-brand {
+    font-weight: 800;
+    font-size: 1.6rem;
+    color: #6a11cb !important;
+    letter-spacing: -0.5px;
+  }
+  .navbar-nav {
+    .nav-link {
+      position: relative;
+      font-weight: 500;
+      margin: 0 12px;
+      color: #333 !important;
+      transition: 0.3s;
+      &:hover {
+        color: #6a11cb !important;
+      }
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: #6a11cb;
+        transition: width 0.3s ease;
+      }
+      &:hover::after {
+        width: 100%;
+      }
+    }
+  }
+}
+
+// HERO
+#header {
+  background: url('https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg') center/cover no-repeat;
+  color: white;
+  text-align: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+  }
+  .container {
+    position: relative;
+    z-index: 1;
+  }
+  p {
+    font-size: 1.3rem;
+    max-width: 650px;
+    margin: auto;
+  }
+}
+.experience-btn {
+  background: rgb(0,0,0,0);
+  color: rgb(255, 255, 255);
+  border: 1px solid;
+  padding: 14px 36px;
+  font-weight: 600;
+  border-radius: 50px;
+  transition: transform 0.3s ease;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(106,17,203,0.3);
+  }
+}
+
+// SECTIONS
+.section {
+  padding: 100px 0;
+}
+#browse {
+  background-color: #fdfdfd;
+  img {
+    border-radius: 1rem;
+  }
+}
+#about {
+  background-color: #f1f3f6;
+  img {
+    border-radius: 1rem;
+  }
+}
+.icon-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+  }
+}
+
+// FOOTER
+footer {
+  background: #0d0d0d;
+}
