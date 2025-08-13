@@ -2,7 +2,7 @@
 // Main stylesheet for the app. Use this file for global and overlay styles.
 
 $primary: #317def;
-$secondary: $primary;
+$secondary: #4e00c3;
 $background: #f6f6f6;
 $overlay: #000000;
 // ----- Base Styles -----
@@ -45,6 +45,7 @@ body {
   font-family: sans-serif; // For better readability
   cursor: pointer;
   color:$background;
+  background-color: rgba(0,0,0);
 }
 
 // ----- Landing Page Styles from index.html -----
@@ -54,7 +55,29 @@ body {
   scroll-behavior: smooth;
   background-color:$background;
 }
-
+h1 {
+  color: $background;
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin: 16px;
+}
+h2{
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin: 8px;
+}
+h3 {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin: 8px;
+}
+b {
+  font-size: 1rem;
+}
+.claim {
+  font-size: 1rem;
+  margin: 32px;
+}
 .fade-overlay {
   position: fixed;
   top: 0;
@@ -73,14 +96,15 @@ body {
 }
 
 .navbar {
-  background-color: #000000 ;
-  position: flex;
+  position: fixed;
+  width: 100%;
   backdrop-filter: blur(4px);
   .navbar-brand {
     font-weight: 800;
     font-size: 1.6rem;
-    color: $background !important;
-    letter-spacing: -0.5px;
+    &:hover {
+      transform: scale(1.1);
+    }
   }
   .navbar-nav {
     .nav-link {
@@ -90,16 +114,28 @@ body {
       color: $background !important;
       transition: 0.3s;
       &:hover {
-        color: $primary!important;
+        transform: scale(1.08);
       }
-      // &::after removed because it was empty
     }
   }
 }
-
+.lang-btn {
+  cursor: pointer;
+  user-select: none;
+  color: $background;
+  font-size: small;
+  &:hover {
+    transform:scale(1.1);
+  }
+}
+.separator {
+  color: $background;
+  font-size: small;
+  margin: 0 4px;
+}
 // HERO
 #header {
-  background: url('public/landing01.jpg') center/cover no-repeat;
+  background: url('public/landing03.jpg') center/cover no-repeat;
   color: white;
   text-align: center;
   position: relative;
@@ -110,23 +146,20 @@ body {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(0,0,0,0.4);
+    background: rgba($overlay, 0.6);
   }
   .container {
     position: relative;
     z-index: 1;
-  }
-  p {
-    font-size: 1.3rem;
-    max-width: 650px;
-    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 }
 .experience-btn {
   background: rgb(0,0,0,0);
   color: rgb(255, 255, 255);
   border: 1px solid;
-  padding: 14px 36px;
   font-weight: 600;
   border-radius: 50px;
   transition: transform 0.3s ease;
@@ -135,32 +168,49 @@ body {
     box-shadow: 0px 0px 0px rgba(246,246,246,0.3);
   }
 }
-
 // SECTIONS
 .section {
-  padding: 100px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
-#browse {
-  background-color: #fdfdfd;
-  img {
-    border-radius: 1rem;
-  }
+.tiler {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
 }
+.tile {
+  padding: 32px;
+  border: $background 1px solid;
+  margin: 16px;
+
+}
+
 #about {
-  background-color: #f1f3f6;
-  img {
-    border-radius: 1rem;
+  min-height: 100vh;
+  background-color:$overlay;
+  color: $background;
+  h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
-.icon-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+
+#browse {
+  min-height: 100vh;
+  background-color: $overlay;
+    h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
 // FOOTER
 footer {
-  background: #0d0d0d;
+  background: $secondary;
 }
