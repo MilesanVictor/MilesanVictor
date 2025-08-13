@@ -5,14 +5,7 @@ $primary: #317def;
 $secondary: #4e00c3;
 $background: #f6f6f6;
 $overlay: #000000;
-// ----- Base Styles -----
-body {
-  margin: 0;
-  padding: 0;
-  flex: auto;
-  overflow: hidden;
-  background-color: $overlay; // App background
-}
+
 
 // ----- Overlay Display Class -----
 .ondisplay {
@@ -51,9 +44,16 @@ body {
 // ----- Landing Page Styles from index.html -----
 
 body {
+  margin: 0;
+  height: 100vh;
   font-family: 'Source-Sans-Pro', Tahoma, sans-serif;
   scroll-behavior: smooth;
   background-color:$background;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+}
+html {
+  scroll-behavior: smooth;
 }
 h1 {
   color: $background;
@@ -169,11 +169,13 @@ b {
   }
 }
 // SECTIONS
-.section {
+section {
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  scroll-snap-align: start;
 }
 .tiler {
   display: flex;
