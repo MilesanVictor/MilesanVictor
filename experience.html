@@ -18,20 +18,33 @@
 
 </head>
 <body style="overflow: hidden;">
-
 <div id="blocker">
+    <nav class="navbar navbar-expand-lg sticky-top" style="background-color: black;">
+    <div class="container" >
+       <a class="nav-link" href="header"> <img src="public/output/id_tosee_signet.svg" alt="tosee" width="32" height="32" class="navbar-brand"> </a>
+        <ul class="navbar-nav mx-auto">
+            <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="#browse">Browse</a></li>
+            <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+        </ul>
+        <div class="lang-selector d-flex">
+            <div class="lang-btn active" id="langEn">EN</div><div class="separator">|</div>
+            <div class="lang-btn" id="langPl">PL</div>
+        </div>
+    </div>
+</nav>
     <div id="instructions">
-        <p style="font-size:36px">
-            Click to play
-        </p>
-        <p>
+        <p style="margin-bottom: 32px;">
             Move: WASD<br/>
             Look: MOUSE
         </p>
+        <button class="experience-btn">
+            <h2 style="font-size: 1.5rem; margin: 16px;" data-en="Experience" data-pl="Doświadcz to">Experience</h2>
+        </button>
     </div>
 </div>
 
-<script class="ondisplay" type="module" src="./main.js"></script>
+<script type="module" src="./main.js"></script>
 
 </body>
 </html>
